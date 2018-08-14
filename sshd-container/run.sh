@@ -47,4 +47,4 @@ while [ "$1" != "" ]; do
   shift
 done
 
-docker run -d -p 22:${host_port} --name ${container_name} ${base_image}-${label}
+docker run -d -p 22:${host_port} --name ${container_name} ${base_image}:ubuntu-16.04-${label}
