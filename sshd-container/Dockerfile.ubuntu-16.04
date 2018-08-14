@@ -1,0 +1,12 @@
+FROM ubuntu:16.04
+MAINTAINER sashidhar guntury <sguntury@gmail.com>
+
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN sed -i 's/PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config && \
+    sed -i 's/UsePAM.*/UsePAM no/g' /etc/ssh/sshd_config && \
+    sed -i 's/#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config
+ 
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
