@@ -2,7 +2,7 @@
 set -xe
 
 HOST_SSH_KEY_PATH="$HOME/.docker_ssh_keys"
-CONTAINER_SSH_KEY_PATH="/root/.ssh"
+CONTAINER_SSH_KEY_PATH="/root/.imported_ssh_keys"
 
 CONTAINER_SSH_PORT=22
 HOST_SSH_PORT=22222
@@ -53,7 +53,7 @@ while [ "$1" != "" ]; do
 done
 
 ## stop the script if it is already running
-## docker rm -f ${container_name}
+docker rm -f ${container_name} || true
 
 ## run the container
 docker run -d -v $HOST_SSH_KEY_PATH:$CONTAINER_SSH_KEY_PATH -p $HOST_SSH_PORT:$CONTAINER_SSH_PORT --name ${container_name} ${base_image}:ubuntu-16.04-${label}

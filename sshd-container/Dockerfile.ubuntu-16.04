@@ -4,14 +4,16 @@ MAINTAINER sashidhar guntury <sguntury@gmail.com>
 RUN apt-get update && apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config && \
-    sed -i 's/UsePAM.*/UsePAM no/g' /etc/ssh/sshd_config && \
+    sed -i 's/UsePAM.*/UsePAM yes/g' /etc/ssh/sshd_config && \
     sed -i 's/#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g' /etc/ssh/sshd_config && \
-    sed -i 's/#PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config
+    sed -i 's/#PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config && \
+    sed -i 's/PrintMotd.*/PrintMotd yes/g' /etc/ssh/sshd_config
 
 COPY scripts/start.sh /bin/start.sh
 RUN chmod +x /bin/start.sh
 
-RUN echo 'cat /etc/motd > /etc/bash.bashrc'
+COPY files/motd_welcome_text.txt /etc/update-motd.d/10-help-text
+RUN chmod +x /etc/update-motd.d/10-help-text
 
 EXPOSE 22
 
