@@ -3,12 +3,16 @@ MAINTAINER sashidhar guntury <sguntury@gmail.com>
 
 RUN apt-get update && apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
-RUN sed -i 's/PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config && \
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config && \
     sed -i 's/UsePAM.*/UsePAM no/g' /etc/ssh/sshd_config && \
     sed -i 's/#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g' /etc/ssh/sshd_config && \
     sed -i 's/#PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config
 
-COPY start.sh /bin/start.sh
+COPY scripts/start.sh /bin/start.sh
+RUN chmod +x /bin/start.sh
+
+RUN echo 'cat /etc/motd > /etc/bash.bashrc'
+
 EXPOSE 22
 
 ENTRYPOINT ["/bin/start.sh"]

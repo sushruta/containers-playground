@@ -1,10 +1,15 @@
 #!/bin/bash
 set -xe
 
+HOST_SSH_KEY_PATH="$HOME/.docker_ssh_keys"
+CONTAINER_SSH_KEY_PATH="/root/.ssh"
+
+CONTAINER_SSH_PORT=22
+HOST_SSH_PORT=22222
+
 base_image="github.com/sushruta/infra/sshd"
 label="latest"
 container_name="sshd-container"
-host_port="22222"
 
 function script_usage() {
   echo "Run an sshd container specifying the image and label you want"
@@ -47,4 +52,8 @@ while [ "$1" != "" ]; do
   shift
 done
 
-docker run -d -p 22:${host_port} --name ${container_name} ${base_image}:ubuntu-16.04-${label}
+## stop the script if it is already running
+## docker rm -f ${container_name}
+
+## run the container
+docker run -d -v $HOST_SSH_KEY_PATH:$CONTAINER_SSH_KEY_PATH -p $HOST_SSH_PORT:$CONTAINER_SSH_PORT --name ${container_name} ${base_image}:ubuntu-16.04-${label}

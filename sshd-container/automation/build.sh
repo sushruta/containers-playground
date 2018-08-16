@@ -4,7 +4,7 @@ set -e
 image_tag="$(git describe --always --tags HEAD)"
 base_image="github.com/sushruta/infra/sshd"
 
-SSH_KEY_PATH="$HOME/.ssh/container_keys"
+SSH_KEY_PATH="$HOME/.docker_ssh_keys"
 
 ## build the docker container here
 for df in Dockerfile.* ; do
@@ -16,8 +16,8 @@ done
 echo "setting up ssh keys"
 
 ## create the location where the public key
-## will be stored. I left it as the home directory
-mkdir -p $SSH_KEY_PATH && rm -f $SSH_KEY_PATH/*
+## will be stored.
+rm -f $SSH_KEY_PATH && mkdir -p $SSH_KEY_PATH
 
 ## create the ssh keys here
 ssh-keygen -q -N "" -t rsa -f $SSH_KEY_PATH/id_rsa_key
@@ -30,7 +30,7 @@ echo "You need to use this key to ssh in as root"
 echo "Please ssh in as 'ssh -i <private.key> root@localhost -p <port_number>'"
 echo "Now the private key"
 echo ""
-cat $SSH_KEY_PATH/id_rsa_key
-rm $SSH_KEY_PATH/id_rsa_key
+cat $SSH_KEY_PATH/id_rsa_key && rm $SSH_KEY_PATH/id_rsa_key
 echo ""
+
 echo "Done"
